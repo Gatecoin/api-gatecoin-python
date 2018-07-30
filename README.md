@@ -6,7 +6,7 @@ This is a simple Gatecoin python REST API client library that abstracts away the
 
 The library can be collected from PyPI like so:
 
-`$ pip install gate_coin`
+`$ pip install gatecoin_api`
 
 ## Usage
 
@@ -14,7 +14,7 @@ The package exposes the `GatecoinAPI` class which has methods from the Gatecoin 
 
 `GatecoinAPI.set_credentials('api_key', 'public_key')`
 
-after that trading APIs may be used, for example:
+After that trading APIs may be used, for example:
 
 `GatecoinAPI.get_balances()`
 
@@ -27,3 +27,11 @@ after that trading APIs may be used, for example:
   - get_market_depth
   - get_order_book
   - get_recent_transactions
+
+## Tests
+
+To setup correctly for tests, set valid development API keys in `GC_TESTS_API_KEY` and `GC_TESTS_PUBLIC_KEY` against sandbox environment `gtcprojects.com` in your shell environment. To run tests please execute:
+
+`$ python setup.py test`
+
+If development keys are not set, trading scope tests will fail.

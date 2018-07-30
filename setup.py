@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="gate_coin",
+    name="gatecoin_api",
     version="0.0.1",
     author="Ahmed Belal",
     author_email="ahmedbelalhashmi@gmail.com",
@@ -25,7 +25,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ),
     install_requires=[
-        'requests'
+        'requests',
+        'marshmallow',
+        'pytz'
     ],
     setup_requires=["pytest-runner"],
     tests_require=["pytest"]
