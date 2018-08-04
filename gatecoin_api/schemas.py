@@ -41,13 +41,13 @@ class ResponseStatusMixin:
 
 class CurrencyPairSchema(Schema):
     """CurrencyPair schema"""
-    trading_code = fields.Str(load_from='tradingCode', required=True)
-    base_currency = fields.Str(load_from='baseCurrency', required=True)
-    quote_currency = fields.Str(load_from='quoteCurrency', required=True)
-    display_name = fields.Str(load_from='displayName', required=True)
+    trading_code = fields.Str(load_from='tradingCode')
+    base_currency = fields.Str(load_from='baseCurrency')
+    quote_currency = fields.Str(load_from='quoteCurrency')
+    display_name = fields.Str(load_from='displayName')
     price_decimal_places = fields.Int(
-        load_from='priceDecimalPlaces', required=True)
-    name = fields.Str(required=True)
+        load_from='priceDecimalPlaces')
+    name = fields.Str()
 
     @post_load
     def make_object(self, data):
@@ -56,8 +56,8 @@ class CurrencyPairSchema(Schema):
 
 class LimitSchema(Schema):
     """Limit schema"""
-    price = fields.Float(required=True)
-    volume = fields.Float(required=True)
+    price = fields.Float()
+    volume = fields.Float()
 
     @post_load
     def make_object(self, data):
@@ -81,15 +81,15 @@ class OrderedLimitSchema(LimitSchema):
 
 class TransactionSchema(Schema):
     """Transaction schema"""
-    transaction_id = fields.Integer(load_from='transactionId', required=True)
+    transaction_id = fields.Integer(load_from='transactionId')
     transaction_time = fields.DateTime(
-        load_from='transactionTime', required=True)
-    price = fields.Float(required=True)
-    quantity = fields.Float(required=True)
-    currency_pair = fields.Str(load_from='currencyPair', required=True)
-    way = fields.Str(required=True)
-    ask_order_id = fields.Str(load_from='askOrderId', required=True)
-    bid_order_id = fields.Str(load_from='bidOrderId', required=True)
+        load_from='transactionTime')
+    price = fields.Float()
+    quantity = fields.Float()
+    currency_pair = fields.Str(load_from='currencyPair')
+    way = fields.Str()
+    ask_order_id = fields.Str(load_from='askOrderId')
+    bid_order_id = fields.Str(load_from='bidOrderId')
 
     @pre_load(pass_many=True)
     def transform_timestamp(self, data, many):

@@ -38,12 +38,12 @@ class CurrencyPair:
 
     def __init__(
             self,
-            trading_code: str,
-            base_currency: str,
-            quote_currency: str,
-            display_name: str,
-            price_decimal_places: int,
-            name: str):
+            trading_code: str = None,
+            base_currency: str = None,
+            quote_currency: str = None,
+            display_name: str = None,
+            price_decimal_places: int = None,
+            name: str = None):
         self.trading_code = trading_code
         self.base_currency = base_currency
         self.quote_currency = quote_currency
@@ -55,7 +55,7 @@ class CurrencyPair:
 class Limit:
     """Limit class"""
 
-    def __init__(self, price: float, volume: float):
+    def __init__(self, price: float = None, volume: float = None):
         self.price = price
         self.volume = volume
 
@@ -65,14 +65,14 @@ class Transaction:
 
     def __init__(
             self,
-            transaction_id: int,
-            transaction_time: datetime,
-            price: float,
-            quantity: float,
-            currency_pair: str,
-            way: str,
-            ask_order_id: str,
-            bid_order_id: str):
+            transaction_id: int = None,
+            transaction_time: datetime = None,
+            price: float = None,
+            quantity: float = None,
+            currency_pair: str = None,
+            way: str = None,
+            ask_order_id: str = None,
+            bid_order_id: str = None):
         self.transaction_id = transaction_id
         self.transaction_time = transaction_time
         self.price = price
@@ -90,8 +90,8 @@ class GetCurrencyPairsResponse:
 
     def __init__(
             self,
-            currency_pairs: List[CurrencyPair],
-            response_status: ResponseStatus):
+            currency_pairs: List[CurrencyPair] = None,
+            response_status: ResponseStatus = None):
         self.currency_pairs = currency_pairs
         self.response_status = response_status
 
@@ -101,9 +101,9 @@ class GetMarketDepthResponse:
 
     def __init__(
             self,
-            asks: List[Limit],
-            bids: List[Limit],
-            response_status: ResponseStatus):
+            asks: List[Limit] = None,
+            bids: List[Limit] = None,
+            response_status: ResponseStatus = None):
         # self.currency = currency :: Removing for now, not receieved in
         # response
         self.asks = asks
@@ -114,7 +114,7 @@ class GetMarketDepthResponse:
 class GetOrderBookResponse:
     """GetOrderBookResponse class"""
 
-    def __init__(self, asks: List[Limit], bids: List[Limit]):
+    def __init__(self, asks: List[Limit] = None, bids: List[Limit] = None):
         # self.currency = currency :: Removing for now, not receieved in
         # response
         self.asks = asks
@@ -128,7 +128,7 @@ class GetRecentTransactionsResponse:
 
     def __init__(
             self,
-            transactions: List[Transaction],
-            response_status: ResponseStatus):
+            transactions: List[Transaction] = None,
+            response_status: ResponseStatus = None):
         self.transactions = transactions
         self.response_status = response_status
