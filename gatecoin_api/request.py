@@ -4,7 +4,7 @@ import requests
 import hmac
 import hashlib
 import base64
-from .constants import HTTPMethod, OrderWay
+from .constants import HTTPMethod
 
 
 class Request:

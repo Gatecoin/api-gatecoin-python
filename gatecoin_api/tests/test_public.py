@@ -1,6 +1,8 @@
 """Test suite for Gatecoin REST API public methods"""
-import pytest
 from datetime import datetime
+
+import pytest
+
 from gatecoin_api import GatecoinAPI
 from gatecoin_api.types import CurrencyPair, Limit, Transaction
 
@@ -47,8 +49,7 @@ def test_get_currency_pairs():
     assert (response.response_status is not None), 'Response status did not deserialize successfully'
     assert (response.currency_pairs is not None), 'Currency pairs list did not deserialize successfully'
 
-    assert (response.response_status.message ==
-            'OK'), 'API response not successful'
+    assert (response.response_status.message == 'OK'), 'API response not successful'
     assert (len(response.currency_pairs) > 0), 'Empty currency pairs list'
 
     for currency_pair in response.currency_pairs:

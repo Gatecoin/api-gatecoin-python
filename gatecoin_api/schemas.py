@@ -1,14 +1,51 @@
 """Types for attributes and request/response for the API"""
-import pytz
 from datetime import datetime
 from typing import List
+
+import pytz
 from marshmallow import Schema, fields, post_load, pre_load
-from .types import ResponseError, ResponseStatus, CurrencyPair, GetCurrencyPairsResponse, Limit, Transaction, GetMarketDepthResponse, GetOrderBookResponse, GetRecentTransactionsResponse
+
+from .types import (AccountBalance, CancelAllOpenOrdersResponse,
+                    CancelOpenOrderResponse, CreateOrderResponse, CurrencyPair,
+                    GetBalanceResponse, GetBalancesResponse,
+                    GetCurrencyPairsResponse, GetMarketDepthResponse,
+                    GetOpenOrderResponse, GetOpenOrdersResponse,
+                    GetOrderBookResponse, GetRecentTransactionsResponse,
+                    GetTradeHistoryResponse, Limit, OpenOrder, ResponseError,
+                    ResponseStatus, TraderTransaction, Transaction)
 
 
-def datetime_to_timestamp(value: datetime):
-    return value.timestamp()
+class TransactionTimeMixin:
+    """Mixin to convert unix timestamp to datetime string for schema"""
 
+    @pre_load(pass_many=True)
+    def transform_timestamp(self, data, many):
+        """OrderedLimit is the same as Limit but only without keys"""
+        if many is True:
+            for transaction in data:
+                transaction['transactionTime'] = datetime.fromtimestamp(
+                    float(transaction['transactionTime']), tz=pytz.utc).isoformat()
+            return data
+        else:
+            data['transactionTime'] = datetime.fromtimestamp(
+                float(data['transactionTime']), tz=pytz.utc).isoformat()
+            return data
+
+class DateMixin:
+    """Mixin to convert unix timestamp to datetime string for schema"""
+
+    @pre_load(pass_many=True)
+    def transform_timestamp(self, data, many):
+        """OrderedLimit is the same as Limit but only without keys"""
+        if many is True:
+            for transaction in data:
+                transaction['date'] = datetime.fromtimestamp(
+                    float(transaction['date']), tz=pytz.utc).isoformat()
+            return data
+        else:
+            data['date'] = datetime.fromtimestamp(
+                float(data['date']), tz=pytz.utc).isoformat()
+            return data
 
 class ResponseErrorSchema(Schema):
     """ResponseError schema"""
@@ -79,7 +116,7 @@ class OrderedLimitSchema(LimitSchema):
             return {'price': data[0], 'volume': data[1]}
 
 
-class TransactionSchema(Schema):
+class TransactionSchema(Schema, TransactionTimeMixin):
     """Transaction schema"""
     transaction_id = fields.Integer(load_from='transactionId')
     transaction_time = fields.DateTime(
@@ -91,22 +128,61 @@ class TransactionSchema(Schema):
     ask_order_id = fields.Str(load_from='askOrderId')
     bid_order_id = fields.Str(load_from='bidOrderId')
 
-    @pre_load(pass_many=True)
-    def transform_timestamp(self, data, many):
-        """OrderedLimit is the same as Limit but only without keys"""
-        if many is True:
-            for transaction in data:
-                transaction['transactionTime'] = datetime.fromtimestamp(
-                    float(transaction['transactionTime']), tz=pytz.utc).isoformat()
-            return data
-        else:
-            data['transactionTime'] = datetime.fromtimestamp(
-                float(data['transactionTime']), tz=pytz.utc).isoformat()
-            return data
-
     @post_load
     def make_object(self, data):
         return Transaction(**data)
+
+
+class AccountBalanceSchema(Schema):
+    """AccountBalance schema"""
+    currency = fields.Str()
+    balance = fields.Float()
+    available_balance = fields.Float(load_from='availableBalance')
+    pending_incoming = fields.Float(load_from='pendingIncoming')
+    pending_outgoing = fields.Float(load_from='pendingOutgoing')
+    open_order = fields.Float(load_from='openOrder')
+    pledging = fields.Float()
+    is_digital = fields.Bool(load_from='isDigital')
+
+    @post_load
+    def make_object(self, data):
+        return AccountBalance(**data)
+
+class TraderTransactionSchema(Schema, TransactionTimeMixin):
+    """TraderTransaction schema"""
+    transaction_id = fields.Int(load_from='transactionId')
+    transaction_time = fields.DateTime(load_from='transactionTime')
+    ask_order_id = fields.Str(load_from='askOrderId')
+    bid_order_id = fields.Str(load_from='bidOrderId')
+    price = fields.Float()
+    quantity = fields.Float()
+    currency_pair = fields.Str(load_from='currencyPair')
+    way = fields.Str()
+    fee_roll = fields.Str(load_from='feeRoll')
+    fee_rate = fields.Float(load_from='feeRate')
+    fee_amount = fields.Float(load_from='feeAmount')
+
+    @post_load
+    def make_object(self, data):
+        return TraderTransaction(**data)
+
+class OpenOrderSchema(Schema, DateMixin):
+    """OpenOrder schema"""
+    code = fields.Str()
+    cl_order_id = fields.Str(load_from='clOrderId')
+    side = fields.Int()
+    price = fields.Float()
+    initial_quantity = fields.Float(load_from='initialQuantity')
+    remaining_quantity = fields.Float(load_from='remainingQuantity')
+    status = fields.Int()
+    status_desc = fields.Str(load_from='statusDesc')
+    transaction_sequence_number = fields.Int(load_from='transSeqNo')
+    type = fields.Int()
+    date = fields.DateTime()
+
+    @post_load
+    def make_object(self, data):
+        return OpenOrder(**data)
 
 # API response schemas
 
@@ -162,3 +238,84 @@ class GetRecentTransactionsResponseSchema(Schema, ResponseStatusMixin):
 
 
 get_recent_transactions_response_schema = GetRecentTransactionsResponseSchema()
+
+class GetBalancesResponseSchema(Schema, ResponseStatusMixin):
+    """GetBalancesResponse schema"""
+    balances = fields.List(fields.Nested(AccountBalanceSchema))
+
+    @post_load
+    def make_object(self, data):
+        return GetBalancesResponse(**data)
+
+
+get_balances_response_schema = GetBalancesResponseSchema()
+
+class GetBalanceResponseSchema(Schema, ResponseStatusMixin):
+    """GetBalanceResponse schema"""
+    balance = fields.Nested(AccountBalanceSchema)
+
+    @post_load
+    def make_object(self, data):
+        return GetBalanceResponse(**data)
+
+
+get_balance_response_schema = GetBalanceResponseSchema()
+
+class GetOpenOrdersResponseSchema(Schema, ResponseStatusMixin):
+    """GetOpenOrdersResponse schema"""
+    orders = fields.List(fields.Nested(OpenOrderSchema))
+    
+    @post_load
+    def make_object(self, data):
+        return GetOpenOrdersResponse(**data)
+
+get_open_orders_response_schema = GetOpenOrdersResponseSchema()
+
+class GetOpenOrderResponseSchema(Schema, ResponseStatusMixin):
+    """GetOpenOrderResponse schema"""
+    order = fields.Nested(OpenOrderSchema)
+    
+    @post_load
+    def make_object(self, data):
+        return GetOpenOrderResponse(**data)
+
+get_open_order_response_schema = GetOpenOrderResponseSchema()
+
+class CreateOrderResponseSchema(Schema, ResponseStatusMixin):
+    """CreateOrderResponse schema"""
+    cl_order_id = fields.Str(load_from='clOrderId')
+    order_status = fields.Str(load_from='orderStatus')
+    
+    @post_load
+    def make_object(self, data):
+        return CreateOrderResponse(**data)
+
+create_order_response_schema = CreateOrderResponseSchema()
+
+class CancelOpenOrderResponseSchema(Schema, ResponseStatusMixin):
+    """CancelOpenOrderResponse schema"""
+    
+    @post_load
+    def make_object(self, data):
+        return CancelOpenOrderResponse(**data)
+
+cancel_open_order_response_schema = CancelOpenOrderResponseSchema()
+
+class CancelAllOpenOrdersResponseSchema(Schema, ResponseStatusMixin):
+    """CancelAllOpenOrdersResponse schema"""
+    
+    @post_load
+    def make_object(self, data):
+        return CancelAllOpenOrdersResponse(**data)
+
+cancel_all_open_orders_response_schema = CancelAllOpenOrdersResponseSchema()
+
+class GetTradeHistoryResponseSchema(Schema, ResponseStatusMixin):
+    """GetTradeHistoryResponse schema"""
+    trades = fields.List(fields.Nested(TraderTransactionSchema))
+    
+    @post_load
+    def make_object(self, data):
+        return GetTradeHistoryResponse(**data)
+
+get_trade_history_response_schema = GetTradeHistoryResponseSchema()

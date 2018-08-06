@@ -13,7 +13,6 @@ class HTTPMethod(Enum):
         return self.value + other
 
 
-class OrderWay(Enum):
-    """Order way enumeration"""
-    BID = 'Bid'
-    ASK = 'Ask'
+# Order Ways
+BID = 'bid'
+ASK = 'ask'

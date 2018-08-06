@@ -2,4 +2,4 @@
 
 from .api import GatecoinAPI
 
-name = "gate_coin"
+name = "gatecoin_api"
