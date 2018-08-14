@@ -100,9 +100,8 @@ class GatecoinAPI:
         """Get specific currency balance"""
         response = Request(cls.private_key, cls.public_key,
                            'v1/Balance/Balances').send()
-
-        response['balance'] = next(
-            balance for balance in response['balances'] if balance['currency'] == currency_code)
+        if 'balances' in response:
+            response['balance'] = next(balance for balance in response['balances'] if balance['currency'] == currency_code)
 
         obj, err = get_balance_response_schema.load(response, partial=True)
 

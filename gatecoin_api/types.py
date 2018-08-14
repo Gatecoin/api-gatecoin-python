@@ -3,9 +3,13 @@ from typing import List
 from datetime import datetime
 
 # pylint: disable=locally-disabled,E1101,R0903
+class DictRepresentation:
+    """Dictionary representation class"""
 
+    def __repr__(self):
+            return repr(self.__dict__)
 
-class ResponseError:
+class ResponseError(DictRepresentation):
     """ResponseError class"""
 
     def __init__(
@@ -18,7 +22,7 @@ class ResponseError:
         self.message = message
 
 
-class ResponseStatus:
+class ResponseStatus(DictRepresentation):
     """ResponseStatus class"""
 
     def __init__(
@@ -33,7 +37,7 @@ class ResponseStatus:
         self.errors = errors
 
 
-class CurrencyPair:
+class CurrencyPair(DictRepresentation):
     """CurrencyPair class"""
 
     def __init__(
@@ -52,7 +56,7 @@ class CurrencyPair:
         self.name = name
 
 
-class Limit:
+class Limit(DictRepresentation):
     """Limit class"""
 
     def __init__(self, price: float = None, volume: float = None):
@@ -60,7 +64,7 @@ class Limit:
         self.volume = volume
 
 
-class Transaction:
+class Transaction(DictRepresentation):
     """Transaction class"""
 
     def __init__(
@@ -82,7 +86,7 @@ class Transaction:
         self.ask_order_id = ask_order_id
         self.bid_order_id = bid_order_id
 
-class AccountBalance:
+class AccountBalance(DictRepresentation):
     """AccountBalance class"""
 
     def __init__(self, currency: str = None, balance: float = None, available_balance: float = None, pending_incoming: float = None, pending_outgoing: float = None, open_order: float = None, pledging: float = None, is_digital: bool = None):
@@ -95,7 +99,7 @@ class AccountBalance:
         self.pledging = pledging
         self.is_digital = is_digital
 
-class TraderTransaction:
+class TraderTransaction(DictRepresentation):
     """TraderTransaction class"""
     def __init__(self, transaction_id: int = None, transaction_time: datetime = None, ask_order_id: str = None, bid_order_id: str = None, price: float = None, quantity: float = None, currency_pair: str = None, way: str = None, fee_roll: str = None, fee_rate: float = None, fee_amount: float = None):
         self.transaction_id = transaction_id
@@ -110,7 +114,7 @@ class TraderTransaction:
         self.fee_rate = fee_rate
         self.fee_amount = fee_amount
 
-class OpenOrder:
+class OpenOrder(DictRepresentation):
     """OpenOrder class"""
 
     def __init__(self, code: str = None, cl_order_id: str = None, side: int = None, price: float = None, initial_quantity: float = None, remaining_quantity: float = None, status: int = None, status_desc: str = None, transaction_sequence_number: int = None, type: int = None, date: datetime = None, trades: List[TraderTransaction] = None):
@@ -131,7 +135,7 @@ class OpenOrder:
 # API response classes
 
 
-class GetCurrencyPairsResponse:
+class GetCurrencyPairsResponse(DictRepresentation):
     """GetCurrencyPairsResponse class"""
 
     def __init__(
@@ -142,7 +146,7 @@ class GetCurrencyPairsResponse:
         self.response_status = response_status
 
 
-class GetMarketDepthResponse:
+class GetMarketDepthResponse(DictRepresentation):
     """GetMarketDepthResponse class"""
 
     def __init__(
@@ -157,7 +161,7 @@ class GetMarketDepthResponse:
         self.response_status = response_status
 
 
-class GetOrderBookResponse:
+class GetOrderBookResponse(DictRepresentation):
     """GetOrderBookResponse class"""
 
     def __init__(self, asks: List[Limit] = None, bids: List[Limit] = None):
@@ -169,7 +173,7 @@ class GetOrderBookResponse:
         # received in response
 
 
-class GetRecentTransactionsResponse:
+class GetRecentTransactionsResponse(DictRepresentation):
     """GetRecentTransactionsResponse class"""
 
     def __init__(
@@ -180,7 +184,7 @@ class GetRecentTransactionsResponse:
         self.response_status = response_status
 
 
-class GetBalancesResponse:
+class GetBalancesResponse(DictRepresentation):
     """GetBalancesResponse class"""
 
     def __init__(
@@ -190,7 +194,7 @@ class GetBalancesResponse:
         self.balances = balances
         self.response_status = response_status
 
-class GetBalanceResponse:
+class GetBalanceResponse(DictRepresentation):
     """GetBalanceResponse class"""
 
     def __init__(
@@ -201,21 +205,21 @@ class GetBalanceResponse:
         self.response_status = response_status
 
 
-class GetOpenOrdersResponse:
+class GetOpenOrdersResponse(DictRepresentation):
     """GetOpenOrdersResponse class"""
 
     def __init__(self, orders: List[OpenOrder], response_status: ResponseStatus):
         self.orders = orders
         self.response_status = response_status
 
-class GetOpenOrderResponse:
+class GetOpenOrderResponse(DictRepresentation):
     """GetOpenOrderResponse class"""
 
     def __init__(self, order: OpenOrder, response_status: ResponseStatus):
         self.order = order
         self.response_status = response_status
 
-class CreateOrderResponse:
+class CreateOrderResponse(DictRepresentation):
     """CreateOrderResponse class"""
 
     def __init__(self, cl_order_id: str = None, order_status: str = None, response_status: ResponseStatus = None):
@@ -223,19 +227,19 @@ class CreateOrderResponse:
         self.order_status = order_status
         self.response_status = response_status
 
-class CancelOpenOrderResponse:
+class CancelOpenOrderResponse(DictRepresentation):
     """CancelOpenOrderResponse class"""
     
     def __init__(self, response_status: ResponseStatus = None):
         self.response_status = response_status
 
-class CancelAllOpenOrdersResponse:
+class CancelAllOpenOrdersResponse(DictRepresentation):
     """CancelAllOpenOrdersResponse class"""
     
     def __init__(self, response_status: ResponseStatus = None):
         self.response_status = response_status
 
-class GetTradeHistoryResponse:
+class GetTradeHistoryResponse(DictRepresentation):
     """GetTradeHistoryResponse class"""
     
     def __init__(self, trades: List[TraderTransaction] = None, response_status: ResponseStatus = None):
