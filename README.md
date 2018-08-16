@@ -79,7 +79,23 @@ $ python
 
 ## Tests
 
-To setup correctly for tests, set valid development API keys in `GC_TESTS_API_KEY` and `GC_TESTS_PUBLIC_KEY` against sandbox environment `gtcprojects.com` in your shell environment. To run tests please execute:
+To setup correctly for tests, set valid development API keys and API base URL in your shell environment:
+
+```sh
+export GTC_TESTS_PRIVATE_KEY=<PRIVATE_KEY>
+export GTC_TESTS_PUBLIC_KEY=<PUBLIC_KEY>
+export GTC_API_BASE_URL=<API_BASE_KEY>
+```
+
+For Windows command line, please use the `set` command:
+
+```bat
+set GTC_TESTS_PRIVATE_KEY=<PRIVATE_KEY>
+set GTC_TESTS_PUBLIC_KEY=<PUBLIC_KEY>
+set GTC_API_BASE_URL=<API_BASE_KEY>
+```
+
+ To run tests please execute:
 
 `$ python setup.py test`
 

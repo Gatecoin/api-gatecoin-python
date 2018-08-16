@@ -13,7 +13,7 @@ from .constants import HTTPMethod
 class Request:
     """Base class for sending API request"""
 
-    BASE_URL = os.environ.get('GC_API_BASE_URL', 'https://api.gatecoin.com/')
+    BASE_URL = os.environ.get('GTC_API_BASE_URL', 'https://api.gatecoin.com/')
 
     def __init__(
             self,

@@ -17,13 +17,13 @@ order_id = None
 def api() -> GatecoinAPI:
     """Fixture to return API class with credentials set for testing"""
     assert (os.environ.get(
-        'GC_TESTS_API_KEY') is not None), 'GC_TESTS_API_KEY not set in environment for trading API\
+        'GC_TESTS_PRIVATE_KEY') is not None), 'GC_TESTS_PRIVATE_KEY not set in environment for trading API\
         tests'
     assert (os.environ.get(
         'GC_TESTS_PUBLIC_KEY') is not None), 'GC_TESTS_PUBLIC_KEY not set in environment for\
         trading API tests'
     GatecoinAPI.set_credentials(os.environ.get(
-        'GC_TESTS_API_KEY'), os.environ.get('GC_TESTS_PUBLIC_KEY'))
+        'GC_TESTS_PRIVATE_KEY'), os.environ.get('GC_TESTS_PUBLIC_KEY'))
     return GatecoinAPI
 
 
