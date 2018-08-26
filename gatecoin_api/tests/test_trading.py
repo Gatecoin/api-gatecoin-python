@@ -22,9 +22,8 @@ def api() -> GatecoinAPI:
     assert (os.environ.get(
         'GC_TESTS_PUBLIC_KEY') is not None), 'GC_TESTS_PUBLIC_KEY not set in environment for\
         trading API tests'
-    GatecoinAPI.set_credentials(os.environ.get(
+    return GatecoinAPI(os.environ.get(
         'GC_TESTS_PRIVATE_KEY'), os.environ.get('GC_TESTS_PUBLIC_KEY'))
-    return GatecoinAPI
 
 
 def _test_balance(balance: AccountBalance):
@@ -115,7 +114,6 @@ def test_create_order(api: GatecoinAPI):
 
     global order_id
     order_id = response.cl_order_id
-    print(order_id)
 
 
 def test_get_open_orders(api: GatecoinAPI):

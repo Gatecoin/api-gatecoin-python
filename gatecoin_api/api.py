@@ -27,107 +27,100 @@ class GatecoinAPI:
     public_key = ''
     private_key = ''
 
-    @classmethod
-    def _handle_response(cls, obj, err):
+    def __init__(self, private_key: str = None, public_key: str = None):
+            self.private_key = private_key
+            self.public_key = public_key
+
+    def _handle_response(self, obj, err):
         if err is not None and bool(err) is True:
             return None
 
         return obj
 
-    @classmethod
-    def set_credentials(cls, private_key: str, public_key: str) -> None:
+    def set_credentials(self, private_key: str, public_key: str) -> None:
         """Set public and private key credentials for API"""
-        cls.private_key = private_key
-        cls.public_key = public_key
+        self.private_key = private_key
+        self.public_key = public_key
 
     # The following methods are in the public domain
     # of the API and can be used without setting API
     # credentials first
-    @classmethod
-    def get_currency_pairs(cls) -> GetCurrencyPairsResponse:
+    def get_currency_pairs(self) -> GetCurrencyPairsResponse:
         """Get currency pairs"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Reference/CurrencyPairs').send()
         obj, err = get_currency_pairs_response_schema.load(
             response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def get_market_depth(cls, currency_pair: str) -> GetMarketDepthResponse:
+    def get_market_depth(self, currency_pair: str) -> GetMarketDepthResponse:
         """Get currency pair market depth"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Public/MarketDepth/{0}'.format(currency_pair)).send()
         obj, err = get_market_depth_response_schema.load(
             response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def get_order_book(cls, currency_pair: str) -> GetOrderBookResponse:
+    def get_order_book(self, currency_pair: str) -> GetOrderBookResponse:
         """Get currency pair order book"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/{0}/OrderBook'.format(currency_pair)).send()
         obj, err = get_order_book_response_schema.load(response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def get_recent_transactions(cls, currency_pair: str) -> GetRecentTransactionsResponse:
+    def get_recent_transactions(self, currency_pair: str) -> GetRecentTransactionsResponse:
         """Get recent transactions for the currency pair"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Public/Transactions/{0}'.format(currency_pair)).send()
         obj, err = get_recent_transactions_response_schema.load(
             response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
     # The following methods are in the trading
     # domain of the API and must be used only
     # after credentials have been set otherwise
     # the response will always be a failure
-    @classmethod
-    def get_balances(cls) -> GetBalancesResponse:
+    def get_balances(self) -> GetBalancesResponse:
         """Get all balances"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Balance/Balances').send()
         obj, err = get_balances_response_schema.load(response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def get_balance(cls, currency_code: str) -> GetBalanceResponse:
+    def get_balance(self, currency_code: str) -> GetBalanceResponse:
         """Get specific currency balance"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Balance/Balances').send()
         if 'balances' in response:
             response['balance'] = next(balance for balance in response['balances'] if balance['currency'] == currency_code)
 
         obj, err = get_balance_response_schema.load(response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def get_open_orders(cls) -> GetOpenOrdersResponse:
+    def get_open_orders(self) -> GetOpenOrdersResponse:
         """Get all open orders"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Trade/Orders').send()
         obj, err = get_open_orders_response_schema.load(response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def get_open_order(cls, order_id: str) -> GetOpenOrderResponse:
+    def get_open_order(self, order_id: str) -> GetOpenOrderResponse:
         """Get specific open order"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Trade/Orders/{0}'.format(order_id)).send()
         obj, err = get_open_order_response_schema.load(response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
     def create_order(
-            cls,
+            self,
             currency_pair: str,
             order_way: str,
             price: float,
@@ -151,42 +144,39 @@ class GatecoinAPI:
         if validation_code is not None:
             params['ValidationCode'] = validation_code
 
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Trade/Orders', HTTPMethod.POST, params).send()
         obj, err = create_order_response_schema.load(response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def cancel_order(cls, order_id: str) -> CancelOpenOrderResponse:
+    def cancel_order(self, order_id: str) -> CancelOpenOrderResponse:
         """Cancel an active order"""
         params = {
             'OrderID': order_id
         }
 
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Trade/Orders/{0}'.format(order_id), HTTPMethod.DELETE, params).send()
         obj, err = cancel_open_order_response_schema.load(
             response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def cancel_all_orders(cls) -> CancelAllOpenOrdersResponse:
+    def cancel_all_orders(self) -> CancelAllOpenOrdersResponse:
         """Cancel all active orders"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Trade/Orders', HTTPMethod.DELETE).send()
         obj, err = cancel_all_open_orders_response_schema.load(
             response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
 
-    @classmethod
-    def get_trade_history(cls) -> GetTradeHistoryResponse:
+    def get_trade_history(self) -> GetTradeHistoryResponse:
         """Get trade history"""
-        response = Request(cls.private_key, cls.public_key,
+        response = Request(self.private_key, self.public_key,
                            'v1/Trade/TradeHistory').send()
         obj, err = get_trade_history_response_schema.load(
             response, partial=True)
 
-        return cls._handle_response(obj, err)
+        return self._handle_response(obj, err)
