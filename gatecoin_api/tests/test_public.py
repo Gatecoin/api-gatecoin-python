@@ -6,6 +6,10 @@ import pytest
 from gatecoin_api import GatecoinAPI
 from gatecoin_api.types import CurrencyPair, Limit, Transaction
 
+@pytest.fixture
+def api() -> GatecoinAPI:
+    """Fixture to return API class with credentials set for testing"""
+    return GatecoinAPI()
 
 def _test_currency_pair(pair: CurrencyPair):
     """Test parsed currency pair structure"""
@@ -38,9 +42,9 @@ def _test_transaction(transaction: Transaction):
         transaction.bid_order_id is not None), 'Bid order ID did not deserialize properly'
 
 
-def test_get_currency_pairs():
+def test_get_currency_pairs(api: GatecoinAPI):
     """Test currency pairs fetching from REST API"""
-    response = GatecoinAPI.get_currency_pairs()
+    response = GatecoinAPI().get_currency_pairs()
     assert (response is not None), 'Response did not deserialize properly'
 
     assert (response.response_status is not None), 'Response status does not exist'
@@ -56,9 +60,9 @@ def test_get_currency_pairs():
         _test_currency_pair(currency_pair)
 
 
-def test_get_market_depth():
+def test_get_market_depth(api: GatecoinAPI):
     """Test fetching market depth info from REST API"""
-    response = GatecoinAPI.get_market_depth('BTCUSD')
+    response = GatecoinAPI().get_market_depth('BTCUSD')
     assert (response is not None), 'Response did not deserialize properly'
 
     assert (response.response_status is not None), 'Response status does not exist'
@@ -77,9 +81,9 @@ def test_get_market_depth():
         _test_limit(limit)
 
 
-def test_get_order_book():
+def test_get_order_book(api: GatecoinAPI):
     """Test fetching order book from REST API"""
-    response = GatecoinAPI.get_order_book('BTCUSD')
+    response = GatecoinAPI().get_order_book('BTCUSD')
     assert (response is not None), 'Response did not deserialize properly'
 
     # Disabled for now, v1 does not return response_status for this method
@@ -97,9 +101,9 @@ def test_get_order_book():
         _test_limit(limit)
 
 
-def test_get_recent_transactions():
+def test_get_recent_transactions(api: GatecoinAPI):
     """Test fetching recent transactions from REST API"""
-    response = GatecoinAPI.get_recent_transactions('BTCUSD')
+    response = GatecoinAPI().get_recent_transactions('BTCUSD')
     assert (response is not None), 'Response did not deserialize properly'
 
     assert (response.response_status.message ==

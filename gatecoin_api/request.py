@@ -70,6 +70,10 @@ class Request:
 
     def message_signature(self, timestamp: str) -> str:
         """Return the message signature to sign the request with"""
+
+        if self.private_key is None or self.public_key is None:
+            return ''
+
         message = (self.http_method + self.url +
                    self.content_type + timestamp).lower()
         digest = hmac.new(self.private_key.encode(),

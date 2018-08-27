@@ -10,14 +10,25 @@ The library can be collected from PyPI like so:
 
 ## Usage
 
-The package exposes the `GatecoinAPI` class which has methods from the Gatecoin REST API. Public methods may be directly used, for trading methods API credentials need to be set:
+The package exposes the `GatecoinAPI` client class which has methods from the Gatecoin REST API. Public methods may be directly used, for trading methods API credentials need to be set:
 
-`GatecoinAPI.set_credentials('api_key', 'public_key')`
+```python
+api = GatecoinAPI('private_key', 'public_key')
+```
+
+or
+
+```python
+api = GatecoinAPI()
+api.set_credentials('private_key', 'public_key')
+```
+
 
 After that trading APIs may be used. Example usage of the Public API:
 
 ```python
-res = GatecoinAPI.get_currency_pairs()
+api = GatecoinAPI()
+res = api.get_currency_pairs()
 print(res.response_status.message) # 'OK'
 print(res.currency_pairs[0].trading_code) # 'BTCEUR'
 print(res.currency_pairs[0].base_currency) # 'BTC'
@@ -60,7 +71,8 @@ Run the interactive python shell and you can use the package as the example give
 ```python
 $ python
 >>> from gatecoin_api import GatecoinAPI as GA
->>> res = GA.get_currency_pairs()
+>>> api = GA()
+>>> res = api.get_currency_pairs()
 >>> res.response_status.message
 'OK'
 >>> res.currency_pairs[0].trading_code
@@ -84,7 +96,7 @@ To setup correctly for tests, set valid development API keys and API base URL in
 ```sh
 export GTC_TESTS_PRIVATE_KEY=<PRIVATE_KEY>
 export GTC_TESTS_PUBLIC_KEY=<PUBLIC_KEY>
-export GTC_API_BASE_URL=<API_BASE_KEY>
+export GTC_API_BASE_URL=<API_BASE_URL>
 ```
 
 For Windows command line, please use the `set` command:
@@ -92,7 +104,7 @@ For Windows command line, please use the `set` command:
 ```bat
 set GTC_TESTS_PRIVATE_KEY=<PRIVATE_KEY>
 set GTC_TESTS_PUBLIC_KEY=<PUBLIC_KEY>
-set GTC_API_BASE_URL=<API_BASE_KEY>
+set GTC_API_BASE_URL=<API_BASE_URL>
 ```
 
  To run tests please execute:
