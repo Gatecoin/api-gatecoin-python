@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="gatecoin_api",
-    version="0.0.1",
+    version="1.0.0",
     author="Ahmed Belal",
-    author_email="ahmedbelalhashmi@gmail.com",
+    author_email="contact@gatecoin.com",
     description="A simple GateCoin REST API client",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://gitlab.com/gatecoin-external/python-client-for-rest-api",
+    url="https://github.com/gatecoin/api-gatecoin-python",
     packages=setuptools.find_packages(exclude=['docs', 'tests*']),
     classifiers=(
         "Programming Language :: Python",
