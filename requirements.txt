@@ -3,4 +3,4 @@ marshmallow==2.15.4
 pylint==2.1.1
 pytest==3.7.1
 pytz==2018.5
-requests==2.19.1
+requests==2.20.0
